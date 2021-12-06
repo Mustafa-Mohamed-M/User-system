@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './components/projects/home';
 import SignIn from './components/auth/login';
@@ -13,7 +12,7 @@ ReactDOM.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />}></Route>
-        <Route path="/signin" element={<SignUp />}></Route>
+        <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/login" element={<SignIn />}></Route>
       </Routes>
     {/* <App /> */}

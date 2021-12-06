@@ -131,3 +131,27 @@ exports.signup = (req, res) => {
       .send("username, email, password and phone_number are required.");
   }
 };
+
+//export the token verification middleware for use in projects service
+exports.verify = (req, res) =>{
+  const authHeader = req.headers.authorization;
+    if (authHeader){//header is provided
+        //verify the token
+        const token = authHeader.split(" ")[1];
+        
+        jwt.verify(token, process.env.SECRET_KEY, (err, info)=>{
+            if (err){
+                //something went wrong or the token is not valid.
+                res.status(401).send("Unauthorized: Token is not valid.");
+            }
+            else{
+                //req.user = info; //token is valid
+                res.status(200).json(info);
+            }
+        });
+    }
+    else{
+        //no header provided
+        res.status(401).send('Unauthorized: No auth found in header');
+    }
+};
