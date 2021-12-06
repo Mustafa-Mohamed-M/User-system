@@ -29,6 +29,12 @@ exports.getUserProject = (req, res)=>{
     })
 };
 
+//get all projects in the database
+exports.getAllProjects = (req, res)=>{
+
+};
+
+//get all tasks for a project
 exports.getProjectTasks = (req, res) =>{
 
 };

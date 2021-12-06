@@ -5,6 +5,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './components/projects/home';
 import SignIn from './components/auth/login';
 import SignUp from './components/auth/signup';
+import AdminSignIn from './components/auth/admin/login';
+import AdminHome from './components/projects/admin/home';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
@@ -14,6 +16,8 @@ ReactDOM.render(
         <Route path="/" element={<Home />}></Route>
         <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/login" element={<SignIn />}></Route>
+        <Route path="/admin/login"element={<AdminSignIn />}></Route>
+        <Route path="/admin/" element={<AdminHome />} ></Route>
       </Routes>
     {/* <App /> */}
     </BrowserRouter>

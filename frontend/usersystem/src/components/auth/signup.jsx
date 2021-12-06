@@ -57,7 +57,6 @@ export default function SignUp() {
     }
   };
 
-
   document.title = 'User System | Signup';
 
   return (
