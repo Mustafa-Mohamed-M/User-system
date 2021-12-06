@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -13,19 +11,50 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Copyright from '../copyright';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
+import { Alert } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 
 
 
 const theme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
+
+  const [loading, setLoading] = React.useState(false);
+  const [message, setMessage] = React.useState(null);
+  const [errorMessage, setErrorMessage] = React.useState(null);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    // });
+    
+    const body = {
+      username: data.get('username'),
+      email: data.get('email'),
+      password: data.get('password'),
+      phone_number: data.get('phonenumber'),
+    };
+    setLoading(true);
+    setMessage('Just a moment...');
+    setErrorMessage(null);
+    try {
+      const response = await axios.post(`http://localhost:5000/auth/signup`, body);
+      setMessage('Registration successful. Redirecting...');
+      navigate('/login');
+    } catch (error) {
+      console.log({error});
+      let mess = 'Something went wrong. That\'s all we know.'
+      if (error.response){
+        mess = error.response.data;
+        if (error.response.status === 500) mess = "Please try a different username-email combination."
+      }
+      setLoading(false);
+      setErrorMessage(`${mess}`);
+      setMessage('');
+    }
   };
 
 
@@ -51,27 +80,19 @@ export default function SignUp() {
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} >
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name="username"
                   required
                   fullWidth
-                  id="firstName"
-                  label="First Name"
+                  id="username"
+                  label="Username"
                   autoFocus
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
+              
+              
               <Grid item xs={12}>
                 <TextField
                   required
@@ -80,6 +101,17 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                />
+              </Grid>
+              <Grid item xs={12} >
+                <TextField
+                  autoComplete="given-name"
+                  name="phonenumber"
+                  required
+                  fullWidth
+                  id="phonenumber"
+                  label="Phone number"
+                  autoFocus
                 />
               </Grid>
               <Grid item xs={12}>
@@ -93,18 +125,24 @@ export default function SignUp() {
                   autoComplete="new-password"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
+              
             </Grid>
+            {errorMessage && 
+              <Alert severity="error" >
+                {errorMessage}
+              </Alert>
+            }
+            {message && 
+              <Alert severity="info">
+                {message}
+              </Alert>
+            }
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              
             >
               Sign Up
             </Button>
