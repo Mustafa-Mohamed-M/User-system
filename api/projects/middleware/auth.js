@@ -19,7 +19,8 @@ const verify = async (req, res, next)=>{
                     next(); //call next route
                 }
                 else{
-                    res.status(401).send('Unauthorized: only users can access this page.');
+                    // res.status(401).send('Unauthorized: only users can access this page.');
+                    next();
                 }
             }
             else{

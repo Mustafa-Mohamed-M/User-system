@@ -28,6 +28,7 @@ import Copyright from "../../copyright";
 import { Alert, ListItem, ListItemIcon } from "@mui/material";
 import axios from "axios";
 import Users from "./users";
+import Projects from "./projects";
 
 const drawerWidth = 240;
 
@@ -238,14 +239,14 @@ export default function Home() {
               
               <Grid item xs={12} md={8} lg={9}>
                 <Paper
-                  sx={{
+                    sx={{
                     p: 2,
                     display: "flex",
                     flexDirection: "column",
                     // height: 240,
                   }}
                 >
-                  <Users />
+                  <Projects />
                 </Paper>
               </Grid>
               

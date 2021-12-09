@@ -31,7 +31,29 @@ exports.getUserProject = (req, res)=>{
 
 //get all projects in the database
 exports.getAllProjects = (req, res)=>{
-
+    sql.connect(dbConfig).then(pool=>{
+        return pool.request()
+        .execute('getAllProjects');
+    }).then((result, err)=>{
+        if (err){
+            res.status(500).send('Internal server error.');    
+        }
+        else{
+            //send the projects as json
+            let projects = [];
+            for (let i = 0; i < result.recordset.length; i++){
+                projects.push({
+                    id: result.recordset[i].id,
+                    name: result.recordset[i].name,
+                    description: result.recordset[i].description,
+                    assigned: result.recordset[i].assigned,
+                });
+            }
+            res.status(200).json({projects});
+        }
+    }).catch(err=>{
+        res.status(500).send('Internal server error.');
+    });
 };
 
 //get all tasks for a project

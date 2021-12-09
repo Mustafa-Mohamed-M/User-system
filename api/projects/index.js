@@ -7,6 +7,7 @@ app.use(cors());
 const port = 5001;
 
 const auth = require('./middleware/auth');
+const isAdminAuth = require('./middleware/isAdmin');
 
 const projectRoutes = require('./routes/projectRoutes');
 
