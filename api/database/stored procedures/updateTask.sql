@@ -1,6 +1,8 @@
---Update task info. The updatable fields are the name, description and completed. Leaving 
---out a field will result in the column maintaining its current value.
-CREATE PROCEDURE updateTask
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[updateTask]
 (@taskId INTEGER, @newTaskName VARCHAR(50) = NULL, @newTaskDescription VARCHAR(225) = NULL, 
 @completed BIT = NULL, @updated BIT OUTPUT)
 AS
@@ -21,3 +23,4 @@ BEGIN
             SET @updated = @@ROWCOUNT;
         END;
 END;
+GO

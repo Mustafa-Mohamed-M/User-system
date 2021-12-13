@@ -1,6 +1,8 @@
---Update user info. The updatable fields are username, email, password and phone number. 
---Leaving out a field will result in its maintaining its current value
-CREATE PROCEDURE updateUserInfo
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[updateUserInfo]
 (@userId INTEGER, @newEmail VARCHAR(225) = NULL, @newUsername VARCHAR(50) = NULL, @newPassword VARCHAR(225) = NULL, 
 @newPhoneNumber VARCHAR(15),
 @updated BIGINT OUTPUT)
@@ -29,3 +31,4 @@ BEGIN
             SET @updated = @@ROWCOUNT;
         END;
 END;
+GO

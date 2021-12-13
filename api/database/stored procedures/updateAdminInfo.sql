@@ -1,6 +1,8 @@
---Update admin info. The updatable fields are the username, email and password. Leaving out 
---any field will result in its maintaining its current value.
-CREATE PROCEDURE updateAdminInfo
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[updateAdminInfo]
 (@adminId INTEGER, @newEmail VARCHAR(225) = NULL, @newUsername VARCHAR(50) = NULL, @newPassword VARCHAR(225) = NULL, 
 @updated BIGINT OUTPUT)
 AS
@@ -9,17 +11,18 @@ BEGIN
     SET @updated = 0;
     IF @newEmail IS NOT NULL
         BEGIN
-            UPDATE [admin] SET [email] = @newEmail  WHERE [id] = @adminId;
+            UPDATE [admin] SET [email] = @newEmail;
             SET @updated = @@ROWCOUNT;
         END;
     IF @newUsername IS NOT NULL
         BEGIN
-            UPDATE [admin] SET [username] = @newUsername  WHERE [id] = @adminId;
+            UPDATE [admin] SET [username] = @newUsername;
             SET @updated = @@ROWCOUNT;
         END;
     IF @newPassword IS NOT NULL
         BEGIN
-            UPDATE [admin] SET [password] = @newPassword  WHERE [id] = @adminId;
+            UPDATE [admin] SET [password] = @newPassword;
             SET @updated = @@ROWCOUNT;
         END;
 END;
+GO

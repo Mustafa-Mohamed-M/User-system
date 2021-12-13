@@ -1,5 +1,8 @@
---Insert a task. A task must be associated with a project. By default the task is not completed
-CREATE PROCEDURE insertTask
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[insertTask]
 (@taskName VARCHAR(50), @description VARCHAR(225), @projectId INTEGER, @inserted BIT OUTPUT)
 AS
 BEGIN
@@ -7,3 +10,4 @@ BEGIN
     INSERT INTO [task] ([name], [description], [project_id]) VALUES(@taskName, @description, @projectId);
     SET @inserted = @@ROWCOUNT;
 END;
+GO

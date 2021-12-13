@@ -1,7 +1,8 @@
-
---Update project info. The updatable fields are the project name and the project description. 
---Leaving out a field will result in its maintaining its current value
-CREATE PROCEDURE updateProject 
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[updateProject] 
 (@projectId INTEGER, @newProjectName VARCHAR(50) = NULL, @newProjectDescription VARCHAR(225) = NULL, @updated BIT OUTPUT)
 AS
 BEGIN
@@ -17,3 +18,4 @@ BEGIN
             SET @updated = @@ROWCOUNT;
         END;
 END;
+GO

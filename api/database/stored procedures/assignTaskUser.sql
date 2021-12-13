@@ -1,5 +1,8 @@
---If the task already had a user assigned to it, the old user is replaced by the new one
-CREATE PROCEDURE assignTaskUser
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[assignTaskUser]
 (@taskId INTEGER, @userId INTEGER, @updated BIT OUTPUT)
 AS
 BEGIN
@@ -19,3 +22,4 @@ BEGIN
                 END;
         END
 END;
+GO

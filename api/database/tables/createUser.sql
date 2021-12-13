@@ -1,8 +1,34 @@
-CREATE TABLE [user] (
-    id INTEGER PRIMARY KEY IDENTITY, --the unique id of the user
-    username VARCHAR(50) UNIQUE NOT NULL, --the username of the user
-    [email] VARCHAR(225) NOT NULL UNIQUE, --the email of the user
-    [password] VARCHAR(225) NOT NULL, --the password of the user
-    [deleted] BIT DEFAULT 0, --whether the user has been deleted or not
-    [phone_number] VARCHAR(15) --the phone number of the user
-);
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[user](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[username] [varchar](50) NOT NULL,
+	[email] [varchar](225) NOT NULL,
+	[password] [varchar](225) NOT NULL,
+	[deleted] [bit] NULL,
+	[phone_number] [varchar](15) NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[user] ADD PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+ALTER TABLE [dbo].[user] ADD UNIQUE NONCLUSTERED 
+(
+	[email] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+ALTER TABLE [dbo].[user] ADD UNIQUE NONCLUSTERED 
+(
+	[username] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[user] ADD  DEFAULT ((0)) FOR [deleted]
+GO

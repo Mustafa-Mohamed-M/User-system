@@ -1,5 +1,8 @@
---Delete project. The project is merely soft-deleted.
-CREATE PROCEDURE deleteProject
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[deleteProject]
 (@projectId INTEGER, @deleted BIT OUTPUT)
 AS
 BEGIN
@@ -7,3 +10,4 @@ BEGIN
     UPDATE [project] SET [deleted] = 1 WHERE [id] = @projectId;
     SET @deleted = @@ROWCOUNT;
 END;
+GO

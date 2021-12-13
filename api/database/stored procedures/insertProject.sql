@@ -1,5 +1,8 @@
---Insert a project. The project is not assigned a user at this point.
-CREATE PROCEDURE insertProject
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[insertProject]
 (@projectName VARCHAR(50), @description VARCHAR(255), @inserted BIT OUTPUT)
 AS
 BEGIN
@@ -7,3 +10,4 @@ BEGIN
     INSERT INTO [project] ([name], [description]) VALUES(@projectName, @description);
     SET @inserted = @@ROWCOUNT;
 END;
+GO
