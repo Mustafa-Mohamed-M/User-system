@@ -11,6 +11,7 @@ export default function Signup(){
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [confirm, setConfirm] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [message, setMessage] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -20,6 +21,12 @@ export default function Signup(){
         event.preventDefault();
         if (email === '' || username === ''){
             setMessage('Please enter username and email address');
+        }
+        else if (password.trim() === ''){
+            setMessage('Please provide a password');
+        }
+        else if (password !== confirm){
+            setMessage('The two passwords do not match.');
         }
         else{
             setMessage('Just a moment.');
@@ -78,6 +85,12 @@ export default function Signup(){
                                         <input className="form-control" id="password" 
                                             onChange={(evt)=>setPassword(evt.target.value)}
                                             type="password" placeholder="Password" ></input>
+                                    </div>
+                                    <div className="form-group col" >
+                                        <label htmlFor="confirmPassword" >Password (again)</label>
+                                        <input className="form-control" id="confirmPassword" 
+                                            onChange={(evt)=>setConfirm(evt.target.value)}
+                                            type="password" placeholder="Password (again)" ></input>
                                     </div>
                                     {
                                         message && <div className="alert alert-sm alert-info show">
