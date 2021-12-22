@@ -9,6 +9,7 @@ export default function UserHome(){
     const [message, setMessage] = useState();
     const [project, setProject] = useState(null);
     const [tasks, setTasks] = useState([]);
+    const [email, setEmail] = useState('');
 
     const columns = [
         {dataField: 'number', text: '#'},
@@ -82,6 +83,7 @@ export default function UserHome(){
                 let success = await getProject();
                 if (success){
                     getUserTasks();
+                    setEmail(localStorage.getItem('email'));
                 }
                 else{
                     navigate('/login');
@@ -103,7 +105,7 @@ export default function UserHome(){
             <div className="collapse navbar-collapse" id="navbar-0">
                 <div className="navbar-nav ml-auto">
                     <a className="nav-item nav-link" href="#" >
-                        Logged in as {}
+                        Logged in as {email}
                     </a>
                 </div>
             </div>

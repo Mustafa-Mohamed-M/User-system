@@ -27,8 +27,9 @@ export default function Login(){
                     password: password,
                 });
                 if (result.status === 200){
-                    const {token} = result.data;
+                    const {token, username, email} = result.data;
                     localStorage.setItem('token', token);
+                    localStorage.setItem('email', email);
                     navigate('/');
                 }
                 else{

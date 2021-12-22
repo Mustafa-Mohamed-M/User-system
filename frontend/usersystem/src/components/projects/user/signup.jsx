@@ -28,6 +28,9 @@ export default function Signup(){
         else if (password !== confirm){
             setMessage('The two passwords do not match.');
         }
+        else if (phoneNumber.length < 10){
+            setMessage('The phone number you provided is not valid.');
+        }
         else{
             setMessage('Just a moment.');
             setLoading(true);
@@ -47,7 +50,7 @@ export default function Signup(){
                 let mess = 'Something went wrong. That\'s all we know.'
                 if (error.response){
                     mess = error.response.data;
-                    if (error.response.status === 500) mess = "Please try a different username-email combination."
+                    if (error.response.status === 400) mess = "Please try a different username-email combination."
                 }
                 setLoading(false);
                 setMessage(`${mess}`);

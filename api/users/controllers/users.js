@@ -22,10 +22,13 @@ exports.login = (req, res) => {
                     .execute("dbo.checkUserLogin");
             })
             .then((result, err) => {
+                //TODO: check if the error was due to duplicate email or username
+
                 if (err) {
                     //an error occurred. Notify res
+                    console.log(err);
                     res
-                        .status(500)
+                        .status(400)
                         .send("An error occurred while validating login credentials.");
                 } else {
                     //a row *may* have been returned from database
@@ -49,7 +52,7 @@ exports.login = (req, res) => {
                                 const token = jwt.sign(stuffInToken, process.env.SECRET_KEY, {
                                     expiresIn: 3600,
                                 });
-                                res.json({ token });
+                                res.json({ token, username, email });
                             }
                         });
                     } else {
