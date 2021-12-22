@@ -13,7 +13,7 @@ const verify = async (req, res, next)=>{
                 }
             });
             if (response.status === 200){
-                // console.log(response.data);
+                console.log(response.data);
                 req.user = response.data;
                 if (req.user.group === 'user'){
                     next(); //call next route
@@ -28,8 +28,15 @@ const verify = async (req, res, next)=>{
                 res.status(401).send('Unauthorized: Invalid token');
             }
         } catch (error) {
-            // console.log(error);
-            res.status(500).send('Internal server error');
+            if (error.response){
+                if (error.response.status === 401){
+                    res.status(401).send('Unauthorized');
+                }
+            }
+            else{
+                res.status(500).send('Internal server error');
+            }
+            
         }
     }
     else{

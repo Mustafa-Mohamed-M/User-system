@@ -10,7 +10,7 @@ exports.getUserProject = (req, res) => {
             .execute('getUserProject');
     }).then((result, err) => {
         if (err) {
-            // console.log(err);
+            console.log(err);
             res.status(500).send('Internal server error.');
         } else {
             let project = {};
@@ -23,7 +23,7 @@ exports.getUserProject = (req, res) => {
             res.json(project);
         }
     }).catch(err => {
-        // console.log(err);
+        console.log(err);
         res.status(500).send('Internal server error.');
     })
 };

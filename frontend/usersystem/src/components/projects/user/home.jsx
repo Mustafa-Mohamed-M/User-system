@@ -56,6 +56,7 @@ export default function UserHome(){
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
             });
+            console.log(result);
             let theProject = result.data;
             if (theProject['id']){
                 setProject(theProject);
@@ -63,8 +64,11 @@ export default function UserHome(){
             else{
                 setProject(null);
             }
+            return true;
         } catch (err){
+            console.log('An error occurred.');
             setMessage(err.response ? err.response.data : "An error occurred.");
+            return false;
         }
     }
 
@@ -74,8 +78,17 @@ export default function UserHome(){
             navigate('/login');
         }
         else{
-            getProject();
-            getUserTasks();
+            async function getStuff(){
+                let success = await getProject();
+                if (success){
+                    getUserTasks();
+                }
+                else{
+                    navigate('/login');
+                }    
+            };
+            getStuff();
+            
         }
     }, []);
 
