@@ -61,7 +61,14 @@ export default function ProjectsHome(){
             setMessage(null);
             
         } catch (error){
-            setMessage('An error occurred.');
+            if (error.response && error.response.status === 401){
+                //navigate to login page
+                navigate('/admin/login');
+            }
+            else{
+                setMessage('An error occurred. Please come back later.');    
+            }
+            
         }
     }
 

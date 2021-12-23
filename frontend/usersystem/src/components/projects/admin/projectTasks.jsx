@@ -12,6 +12,7 @@ export default function ProjectTasks(){
     const [isOpen, setIsOpen] = useState(false);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [modalMessage, setModalMessage] = useState(null);
     
     const navigate = useNavigate();
 
@@ -75,8 +76,14 @@ export default function ProjectTasks(){
     }
 
     async function saveTask(){
+
+        //prevent saving an empty task (no name or description)
+        if (name.trim() === '' || description.trim() === ''){
+            setModalMessage('Please enter name and description.');
+            return;
+        }
         try {
-            setMessage('Fetching tasks..');
+            
             let response = await axios.post(
                 `http://localhost:5001/projects/save_task`,
                 {
@@ -91,16 +98,21 @@ export default function ProjectTasks(){
                 }
             );
             setMessage('Task saved successfully.');
+            setModalMessage(null);
+            setName('');
+            setDescription('');
             toggleModal();
             getTasks();
         } catch (error) {
             console.log(error.response);
-            toggleModal();
-            setMessage('An error occurred while saving the task.');
+            // toggleModal();
+            // setMessage('An error occurred while saving the task.');
+            setModalMessage('An error occurred while saving the task.');
         }
     }
 
     function toggleModal(){
+        setModalMessage(null);
         setIsOpen(!isOpen);
     }
 
@@ -117,26 +129,35 @@ export default function ProjectTasks(){
         <React.Fragment>
         <TheNavBar />
 
-        <Modal show={isOpen} onHide={toggleModal} centered>
-            <Modal.Header closeButton>
+        <Modal className="text-dark" show={isOpen} onHide={toggleModal} centered>
+            <Modal.Header >
                 <Modal.Title>Add Task</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div className="card-text" >
-                    <form>
-                        <div className="form-group" >
-                            <label htmlFor="taskName" >Name</label>
-                            <input className="form-control" 
-                            onChange={(evt)=>setName(evt.target.value)}
-                            id="taskName" placeholder="Task name" />
-                        </div>
-                        <div className="form-group" >
-                            <label htmlFor="taskDescription" >Description</label>
-                            <textarea className="form-control" 
-                            onChange={(evt)=>setDescription(evt.target.value)}
-                            id="taskDescription" placeholder="Description"></textarea>
-                        </div>
-                    </form>
+                {modalMessage && 
+                    <div className="alert alert-danger show">
+                        {modalMessage}
+                    </div>
+                }
+                <div className="card text-dark mb-3">
+                    <div className="card-body" >
+                    <div className="card-text " >
+                        <form>
+                            <div className="form-group" >
+                                <label htmlFor="taskName" >Name</label>
+                                <input className="form-control" 
+                                onChange={(evt)=>setName(evt.target.value)}
+                                id="taskName" placeholder="Task name" />
+                            </div>
+                            <div className="form-group" >
+                                <label htmlFor="taskDescription" >Description</label>
+                                <textarea className="form-control" 
+                                onChange={(evt)=>setDescription(evt.target.value)}
+                                id="taskDescription" placeholder="Description"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    </div>
                 </div>
             </Modal.Body>
             <Modal.Footer>

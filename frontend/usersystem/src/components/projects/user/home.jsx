@@ -4,12 +4,14 @@ import { useNavigate } from "react-router-dom";
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
+
 export default function UserHome(){
 
     const [message, setMessage] = useState();
     const [project, setProject] = useState(null);
     const [tasks, setTasks] = useState([]);
     const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
 
     const columns = [
         {dataField: 'number', text: '#'},
@@ -84,6 +86,7 @@ export default function UserHome(){
                 if (success){
                     getUserTasks();
                     setEmail(localStorage.getItem('email'));
+                    setUsername(localStorage.getItem('username'));
                 }
                 else{
                     navigate('/login');
@@ -105,7 +108,7 @@ export default function UserHome(){
             <div className="collapse navbar-collapse" id="navbar-0">
                 <div className="navbar-nav ml-auto">
                     <a className="nav-item nav-link" href="#" >
-                        Logged in as {email}
+                        Logged in as {username}
                     </a>
                 </div>
             </div>
@@ -119,10 +122,28 @@ export default function UserHome(){
         </nav>
         <div className="container" >
             <div className="row" >
-                <div className="col" >
+                <div className="col-1" ></div>
+                <div className="col-10" >
                     {
                         project === null ? 
-                        <div>You have not been assigned a project yet</div> 
+                        
+                            <div className="card text-dark mt-3" >
+                                <div className="card-header" >
+                                    No Project. Yet.
+                                </div>
+                                <div className="card-body" >
+                                    <div className="card-title" >Breathe!</div>
+                                    <div className="card-text" >
+                                        You have not been assigned a project yet.
+                                        However, we are working to find you something to do.
+                                    </div>
+                                    <div className="card-footer">
+                                        <button className="btn btn-primary" >Refresh this page</button>
+                                        <button className="btn btn-secondary ml-3" onClick={(evt)=>logOut(evt)} >Log out</button>
+                                    </div>
+                                </div>
+                            </div>
+                        
                         : 
                         <div className="alert alert-info alert-sm show" >
                             You have been assigned 1 project.
@@ -142,6 +163,7 @@ export default function UserHome(){
                         </div>
                     }
                 </div>
+                <div className="col-1" ></div>
             </div>
         </div>
         

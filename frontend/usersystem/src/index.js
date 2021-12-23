@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './bootstraptheme.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import AdminLogin from './components/projects/admin/login';
-
 import reportWebVitals from './reportWebVitals';
 import ProjectsHome from './components/projects/admin/newprojects';
 import AddProject from './components/projects/admin/addProject';

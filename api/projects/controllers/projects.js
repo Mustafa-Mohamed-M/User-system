@@ -10,7 +10,7 @@ exports.getUserProject = (req, res) => {
             .execute('getUserProject');
     }).then((result, err) => {
         if (err) {
-            console.log(err);
+            // console.log(err);
             res.status(500).send('Internal server error.');
         } else {
             let project = {};
@@ -97,7 +97,7 @@ exports.assignUserProject = (req, res) => {
             res.status(500).send('Hmm. That was not supposed to happen.');
         } else {
             let updated = result.output.updated;
-            // console.log(`Updated: ${updated}`);
+            console.log(`Updated: ${updated}`);
             if (updated === 1) {
                 res.send('User assigned project successfully.');
             } else {

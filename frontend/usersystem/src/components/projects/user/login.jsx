@@ -30,6 +30,7 @@ export default function Login(){
                     const {token, username, email} = result.data;
                     localStorage.setItem('token', token);
                     localStorage.setItem('email', email);
+                    localStorage.setItem('username', username);
                     navigate('/');
                 }
                 else{
@@ -58,7 +59,7 @@ export default function Login(){
                                     <label htmlFor='password' >Password</label>
                                     <input  onChange={(evt)=>setPassword(evt.target.value)} className='form-control' type="password" placeholder='Enter password' id='password' />
                                 </div>
-                                {message && <div className="alert alert-sm alert-info show" >
+                                {message && <div className="alert alert-sm alert-warning show" >
                                     {message}
                                     </div>}
                                 <button className='btn btn-info ml-5 ' onClick={()=>navigate('/signup')} >Create an account</button>
