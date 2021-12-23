@@ -140,6 +140,40 @@ exports.getProjectTasks = (req, res) => {
     })
 };
 
+//get the tasks of a project in a paginated manner
+exports.getProjectTasksPaginated = (req, res) =>{
+    let {page, limit} = req.query;
+    const project_id = req.params.project_id;
+    sql.connect(dbConfig).then(pool => {
+        return pool.request()
+            .input('projectId', sql.Int, parseInt(project_id))
+            .input('PageNumber', sql.Int, parseInt(page))
+            .input('RowCount', sql.Int, parseInt(limit))
+            .output('TotalTasks', sql.Int)
+            .execute('getProjectTasksPaginated');
+    }).then((result, err) => {
+        if (err) {
+            res.status(500).send('We cannot service your request right now.');
+        } else {
+            let tasks = []
+            for (let i = 0; i < result.recordset.length; i++) {
+                let task = result.recordset[i];
+                tasks.push({
+                    id: task.id,
+                    name: task.name,
+                    description: task.description,
+                    completed: task.completed === 1,
+                    user_id: task.user_id,
+                    user_name: task.assigned,
+                });
+            }
+            res.json({tasks: tasks, totalTasks: result.output.TotalTasks});
+        }
+    }).catch(err => {
+        res.status(500).send('An error occurred while getting the tasks for the project.');
+    })
+};
+
 //save a project
 exports.saveProject = (req, res) => {
     if (req.user.group !== 'admin') { //use better conditions!!

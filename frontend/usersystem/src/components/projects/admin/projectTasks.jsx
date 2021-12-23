@@ -13,6 +13,9 @@ export default function ProjectTasks(){
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [modalMessage, setModalMessage] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowCount, setRowCount] = useState(3);
+    const [numTasks, setNumTasks] = useState(0);
     
     const navigate = useNavigate();
 
@@ -23,15 +26,18 @@ export default function ProjectTasks(){
         else{
             try {
                 setMessage('Fetching tasks..');
+                let url = `http://localhost:5001/projects/get_project_tasks_paginated/${state.project.id}?page=${currentPage}&limit=${rowCount}`;
                 let response = await axios.get(
-                    `http://localhost:5001/projects/get_project_tasks/${state.project.id}`,
+                    url,
                     {
                         headers:{
                             Authorization: `Bearer ${localStorage.getItem("admin-token")}`,
                         },
                     }
                 );
-                setTasks(response.data);
+                console.log(response);
+                setTasks(response.data.tasks);
+                setNumTasks(response.data.totalTasks);
                 setMessage(null);
                 
             } catch (error) {
@@ -40,6 +46,10 @@ export default function ProjectTasks(){
         }
     }
 
+    async function rowCountChanged(value){
+        setRowCount(parseInt(value));
+        setCurrentPage(1);
+    }
 
     async function assignTaskToUser(task_id){
         if (state.project.user_id === null){
@@ -111,12 +121,17 @@ export default function ProjectTasks(){
         }
     }
 
+    async function goToPage(event, page){
+        event.preventDefault();
+        setCurrentPage(parseInt(page));
+    }
+
     function toggleModal(){
         setModalMessage(null);
         setIsOpen(!isOpen);
     }
 
-    useEffect(async ()=>{
+    useEffect( ()=>{
         if (!localStorage.getItem("admin-token")) {
             navigate("/admin/login");
         }
@@ -124,6 +139,21 @@ export default function ProjectTasks(){
             getTasks();
         }
     }, []);
+
+    useEffect(()=>{
+        getTasks();
+    }, [currentPage, rowCount]);
+
+    //get the number of pages needed
+    let numPages = 0;
+    if (numTasks > 0){
+        numPages = parseInt(numTasks / rowCount) + 1;
+    }
+
+    let pageLinks = [];
+    for (let i = 0; i < numPages; i++){
+        pageLinks.push(<li key={i} className="page-item"><a className="page-link" href="#" onClick={(evt)=>goToPage(evt, i + 1)} >{i + 1}</a></li>);
+    }
 
     return (
         <React.Fragment>
@@ -171,13 +201,13 @@ export default function ProjectTasks(){
         </Modal>
         
         
-        <div className="container-fluid" id="theContainer" >
+        <div className="container" id="theContainer" >
             <label>Tasks for project "{state === null ? "" : state.project.name}"</label>
             <button className="btn btn-primary btn-sm ml-5" 
             onClick={()=>toggleModal()}
             >Add task...</button>
             <br/>
-            <label>{tasks.length} tasks found</label>
+            <label>{numTasks} tasks found</label>
             <br/>
             {message && 
                 <div className="alert alert-info show"  >
@@ -185,7 +215,7 @@ export default function ProjectTasks(){
                 </div>
             }
             
-            <table className="table table table-dark" id="table"  >
+            <table className="table table-hover table-dark" id="table"  >
                 <thead>
                     <tr>
                     <th scope="col">
@@ -230,6 +260,33 @@ export default function ProjectTasks(){
                     
                 </tbody>
             </table>
+            {
+                numTasks > 0 && 
+                <div className="d-flex justify-content-center">
+                    <select className="form-control mr-1" 
+                    onChange={(evt)=>rowCountChanged(evt.target.value)} >
+                        <option value="3" >3</option>
+                        <option value="10" >10</option>
+                        <option value="30" >30</option>
+                    </select>
+
+                    <nav aria-label="Pagination">
+                        <ul className="pagination" >
+                            <li className="page-item" >
+                                <button className="page-link" href="#">Previous</button>
+                            </li>
+                            {pageLinks.length > 0 && 
+                                pageLinks.map((item, index)=>{
+                                    return item;
+                                })
+                            }
+                            <li className="page-item" >
+                                <button className="page-link" href="#">Next</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            }
         </div>
         </React.Fragment>
     );

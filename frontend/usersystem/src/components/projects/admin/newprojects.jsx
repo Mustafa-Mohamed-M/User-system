@@ -97,7 +97,7 @@ export default function ProjectsHome(){
     return (
         <React.Fragment>
         <TheNavBar active={2} />
-        <div className="container-fluid">
+        <div className="container">
             {
                 message && 
                 <div className="alert alert-success fade in alert-dismissible show" >
@@ -108,9 +108,28 @@ export default function ProjectsHome(){
             <button 
             onClick={()=>addProject()}
             className="btn btn-primary mr-3 mb-3" style={{marginLeft: "5px"}} >Add project</button>
-            <BootstrapTable  keyField="id" data={projects} columns={columns} 
-                            
-                            pagination={paginationFactory()} />
+            <table className="table table-hover table-dark" >
+                <thead>
+                    <tr>
+                        <th>Project name</th>
+                        <th>Description</th>
+                        <th>Tasks</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        projects.map((item)=>{
+                            return <tr key={item.id} >
+                                <td>{item.name}</td>
+                                <td>{item.description}</td>
+                                <td>{item.tasks}</td>
+                                <td>{item.actions}</td>
+                            </tr>
+                        })
+                    }
+                </tbody>
+            </table>
         </div>
         </React.Fragment>
     );
