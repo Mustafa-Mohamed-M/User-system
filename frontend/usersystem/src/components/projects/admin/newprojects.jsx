@@ -3,8 +3,7 @@ import TheNavBar from "./navbar";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import BootstrapTable from 'react-bootstrap-table-next';
-import paginationFactory from 'react-bootstrap-table2-paginator';
+
 
 export default function ProjectsHome(){
 

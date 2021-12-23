@@ -142,8 +142,8 @@ export default function TheUsers(){
                     <button className="btn btn-secondary ml-2" onClick={()=>hideAssignUserProjectDialog()} >Cancel</button>
                 </Modal.Footer>
             </Modal>
-
-            <label>Users ({users.length})</label>
+            <div className="container" >
+                <h4>Users</h4>
             {
                 message && 
                 <div className="alert alert-warning fade in alert-dismissible show">
@@ -188,10 +188,7 @@ export default function TheUsers(){
                                         disabled={item.project_id !== -1}
                                         onClick={()=>assignUserProject(item)}
                                          >Assign project</button>
-                                        <button className="btn btn-primary btn-sm mr-3 mb-3" 
-                                        disabled={item.project_id === -1}
-                                        onClick={()=>assignUserTask(item)}
-                                        >Assign task</button>
+                                        
                                         <button className="btn btn-danger btn-sm mr-3 mb-3" >Delete</button>
                                     </td>
                                 </tr>
@@ -200,6 +197,7 @@ export default function TheUsers(){
                     }
                 </tbody>
             </table>
+            </div>
         </React.Fragment>
     );
 }
