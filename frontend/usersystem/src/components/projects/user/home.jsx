@@ -12,6 +12,9 @@ export default function UserHome(){
     const [tasks, setTasks] = useState([]);
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowCount, setRowCount] = useState(3);
+    const [numTasks, setNumTasks] = useState(0);
 
     const columns = [
         {dataField: 'number', text: '#'},
@@ -29,23 +32,39 @@ export default function UserHome(){
         navigate('/login');
     }
 
+    async function rowCountChanged(value){
+        setRowCount(parseInt(value));
+        setCurrentPage(1); //start over since the number of rows has changed
+        //getUserTasks(); //refresh the tasks that are being displayed
+    }
+
+    async function goToPage(page){
+        setCurrentPage(parseInt(page));
+    }
+
     async function getUserTasks(){
+        let url = `http://localhost:5001/projects/get_user_tasks`;
+        let orderBy = 'id';
+        url = 
+        `http://localhost:5001/projects/get_user_tasks_paginated?page=${currentPage}&limit=${rowCount}&orderBy=${orderBy}`
         try{
-            let result = await axios.get(`http://localhost:5001/projects/get_user_tasks`,
+            let result = await axios.get(url,
             {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-            setTasks(result.data.map((item, index)=>{
+            
+            setTasks(result.data.tasks.map((item, index)=>{
                 return {
+                    id: item.id,
                     number: index + 1,
                     name: item.name,
                     description: item.description,
                     completed: item.completed ? "Yes" : "No",
                 }
-                
             }));
+            setNumTasks(result.data.totalTasks);
         } catch (err){
             setMessage(`Something's not right. Please try again later.`);
         }
@@ -59,7 +78,7 @@ export default function UserHome(){
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-            console.log(result);
+            
             let theProject = result.data;
             if (theProject['id']){
                 setProject(theProject);
@@ -97,6 +116,21 @@ export default function UserHome(){
         }
     }, []);
 
+    useEffect(()=>{
+        getUserTasks();
+    }, [rowCount, currentPage])
+
+
+    //get the number of pages needed
+    let numPages = 0;
+    if (numTasks > 0){
+        numPages = parseInt(numTasks / rowCount) + 1;
+    }
+
+    let pageLinks = [];
+    for (let i = 0; i < numPages; i++){
+        pageLinks.push(<li key={i} className="page-item"><a className="page-link" href="#" onClick={(evt)=>goToPage(i + 1)} >{i + 1}</a></li>);
+    }
 
     return <React.Fragment>
         <nav id="navbar-0" className="navbar navbar-expand-sm navbar-dark bg-primary mb-3">
@@ -155,11 +189,57 @@ export default function UserHome(){
                         project && 
                         <div>
                             {tasks.length === 0 ? "You have not been assigned any tasks yet." : 
-                                "You have been assigned the following " + tasks.length + " task(s)."}
+                                "You have been assigned " + numTasks + " task(s)."}
                             <br/>
-                            <BootstrapTable className="table" keyField="id" data={tasks} columns={columns} 
-                            pagination={paginationFactory()} />
-                            
+                            <table className="table table-hover table-dark table-bordered" >
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Task</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Completed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        tasks.map((item)=>{
+                                            return <tr key={item.id} >
+                                                <td>{item.number}</td>
+                                                <td>{item.name}</td>
+                                                <td>{item.description}</td>
+                                                <td>{item.completed}</td>
+                                            </tr>
+                                        })
+                                    }
+                                </tbody>
+                            </table>
+                            {
+                                numTasks > 0 && 
+                                <div className="d-flex justify-content-center">
+                                    <select className="form-control mr-1" 
+                                    onChange={(evt)=>rowCountChanged(evt.target.value)} >
+                                        <option value="3" >3</option>
+                                        <option value="10" >10</option>
+                                        <option value="30" >30</option>
+                                    </select>
+
+                                    <nav aria-label="Pagination">
+                                        <ul className="pagination" >
+                                            <li className="page-item" >
+                                                <a className="page-link" href="#">Previous</a>
+                                            </li>
+                                            {pageLinks.length > 0 && 
+                                                pageLinks.map((item, index)=>{
+                                                    return item;
+                                                })
+                                            }
+                                            <li className="page-item" >
+                                                <a className="page-link" href="#">Next</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            }
                         </div>
                     }
                 </div>

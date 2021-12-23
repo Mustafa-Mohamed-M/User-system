@@ -208,6 +208,53 @@ exports.addTaskToProject = (req, res) => {
     }
 }
 
+//get the tasks of a user in a paginated manner
+exports.getUserTasksPaginated = (req, res) =>{
+    let {page, limit, orderBy} = req.query;
+    const userId = parseInt(req.user.id);
+    let orderById = 0;
+    let orderByName = 0;
+    let orderByDescription = 0;
+    if (orderBy === 'id') orderById = 1;
+    else if (orderBy === 'name') orderByName = 1;
+    else if (orderBy === 'description') orderByDescription = 1;
+    else orderById = 1;
+    sql.connect(dbConfig).then(pool =>{
+        return pool.request()
+        .input('UserId', sql.Int, userId)
+        .input('PageNumber', sql.Int, parseInt(page))
+        .input('RowCount', sql.Int, parseInt(limit))
+        .input('OrderById', sql.Bit, orderById)
+        .input('OrderByName', sql.Bit, orderByName)
+        .input('OrderByDescription', sql.Bit, orderByDescription)
+        .output('TotalTasks', sql.Int)
+        .execute('getUserTasksPaginated');
+    }).then((result, err)=>{
+        if (err){
+            res.status(500).send('We could not complete the request at the moment. Please try again later.');
+        }
+        else{
+            let tasks = [];
+            for (let i = 0; i < result.recordset.length; i++) {
+
+                const { id, name, description, completed, project_id } = result.recordset[i]
+                tasks.push({
+                    id,
+                    name,
+                    description,
+                    completed,
+                    project_id
+                });
+            }
+            res.json({
+                tasks,
+                totalTasks: result.output.TotalTasks});
+        }
+    }).catch(err=>{
+        res.status(500).send('An error occurred while fetching user tasks.');
+    })
+};
+
 exports.getUserTasks = (req, res) => {
     sql.connect(dbConfig).then(pool => {
         return pool.request()
