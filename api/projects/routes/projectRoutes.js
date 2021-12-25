@@ -4,7 +4,7 @@ const isAdminAuth = require('./../middleware/isAdmin');
 
 const { getUserProject, getProjectTasks, getAllProjects, saveProject, 
 	assignUserProject, addTaskToProject, assignUserTask, getUserTasks,
-	getUserTasksPaginated, getProjectTasksPaginated} = require('../controllers/projects');
+	getUserTasksPaginated, getProjectTasksPaginated, getAllProjectsPaginated} = require('../controllers/projects');
 
 router.route('/get_user_project').post(getUserProject);
 router.route('/get_user_tasks').get(getUserTasks);
@@ -12,6 +12,7 @@ router.route('/get_user_tasks_paginated').get(getUserTasksPaginated);
 router.route('/get_project_tasks_paginated/:project_id').get(getProjectTasksPaginated);
 router.route('/assign_user_project', isAdminAuth).post(assignUserProject);
 router.route('/get_all_projects').get(getAllProjects);
+router.route('/get_all_projects_paginated').get(getAllProjectsPaginated);
 router.route('/save_project', isAdminAuth).post(saveProject);
 router.route('/get_project_tasks/:project_id').get(getProjectTasks);
 router.route('/save_task', isAdminAuth).post(addTaskToProject);

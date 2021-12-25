@@ -13,7 +13,7 @@ const verify = async (req, res, next)=>{
                 }
             });
             if (response.status === 200){
-                console.log(response.data);
+                //console.log(response.data);
                 req.user = response.data;
                 if (req.user.group === 'user'){
                     next(); //call next route

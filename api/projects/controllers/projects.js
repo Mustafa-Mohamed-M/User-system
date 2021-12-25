@@ -28,6 +28,40 @@ exports.getUserProject = (req, res) => {
     })
 };
 
+
+//get all projects in the database in a paginated manner
+exports.getAllProjectsPaginated = (req, res)=>{
+    let {page, limit} = req.query;
+    sql.connect(dbConfig).then(pool => {
+        return pool.request()
+            .input('PageNumber', sql.Int, parseInt(page))
+            .input('RowCount', sql.Int, parseInt(limit))
+            .output('TotalProjects', sql.Int)
+            .execute('getAllProjectsPaginated');
+    }).then((result, err) => {
+        if (err) {
+            res.status(500).send('Internal server error.');
+        } else {
+            //send the projects as json
+            let projects = [];
+            for (let i = 0; i < result.recordset.length; i++) {
+                projects.push({
+                    id: result.recordset[i].id,
+                    name: result.recordset[i].name,
+                    description: result.recordset[i].description,
+                    assigned: result.recordset[i].assigned,
+                    user_id: result.recordset[i].user_id,
+                    tasks: result.recordset[i].tasks,
+                });
+            }
+            const totalProjects = result.output.TotalProjects;
+            res.status(200).json({ projects, totalProjects });
+        }
+    }).catch(err => {
+        res.status(500).send('Internal server error.');
+    });
+};
+
 //get all projects in the database
 exports.getAllProjects = (req, res) => {
     sql.connect(dbConfig).then(pool => {
@@ -97,7 +131,7 @@ exports.assignUserProject = (req, res) => {
             res.status(500).send('Hmm. That was not supposed to happen.');
         } else {
             let updated = result.output.updated;
-            console.log(`Updated: ${updated}`);
+            // console.log(`Updated: ${updated}`);
             if (updated === 1) {
                 res.send('User assigned project successfully.');
             } else {
