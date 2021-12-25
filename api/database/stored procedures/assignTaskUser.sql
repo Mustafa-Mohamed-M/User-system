@@ -1,8 +1,14 @@
+USE [usersystem]
+GO
+
+/****** Object:  StoredProcedure [dbo].[assignTaskUser]    Script Date: 12/25/2021 1:52:02 PM ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[assignTaskUser]
+
+CREATE OR ALTER PROCEDURE [dbo].[assignTaskUser]
 (@taskId INTEGER, @userId INTEGER, @updated BIT OUTPUT)
 AS
 BEGIN
@@ -23,3 +29,4 @@ BEGIN
         END
 END;
 GO
+

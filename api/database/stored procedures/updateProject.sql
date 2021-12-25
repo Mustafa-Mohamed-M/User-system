@@ -1,8 +1,14 @@
+USE [usersystem]
+GO
+
+/****** Object:  StoredProcedure [dbo].[updateProject]    Script Date: 12/25/2021 1:59:45 PM ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[updateProject] 
+
+CREATE OR ALTER PROCEDURE [dbo].[updateProject] 
 (@projectId INTEGER, @newProjectName VARCHAR(50) = NULL, @newProjectDescription VARCHAR(225) = NULL, @updated BIT OUTPUT)
 AS
 BEGIN
@@ -19,3 +25,4 @@ BEGIN
         END;
 END;
 GO
+

@@ -1,8 +1,14 @@
+USE [usersystem]
+GO
+
+/****** Object:  StoredProcedure [dbo].[updateAdminInfo]    Script Date: 12/25/2021 1:59:33 PM ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[updateAdminInfo]
+
+CREATE OR ALTER PROCEDURE [dbo].[updateAdminInfo]
 (@adminId INTEGER, @newEmail VARCHAR(225) = NULL, @newUsername VARCHAR(50) = NULL, @newPassword VARCHAR(225) = NULL, 
 @updated BIGINT OUTPUT)
 AS
@@ -26,3 +32,4 @@ BEGIN
         END;
 END;
 GO
+
