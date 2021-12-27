@@ -168,8 +168,10 @@ export default function UserHome(){
                                 <div className="card-body" >
                                     <div className="card-title" >Breathe!</div>
                                     <div className="card-text" >
+                                        <h4>
                                         You have not been assigned a project yet.
                                         However, we are working to find you something to do.
+                                        </h4>
                                     </div>
                                     <div className="card-footer">
                                         <button className="btn btn-primary" >Refresh this page</button>
@@ -179,10 +181,11 @@ export default function UserHome(){
                             </div>
                         
                         : 
-                        <div className="alert alert-info alert-sm show" >
-                            You have been assigned 1 project.
-                            <p>{project.name}</p>
-                            <p>{project.description}</p>
+                        <div className="alert alert-success alert-sm show" >
+                            <h4>
+                            You have been assigned project {project.name}
+                            <p className="text-muted" >{project.description}</p>
+                            </h4>
                         </div>
                     }
                     {
