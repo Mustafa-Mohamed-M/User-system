@@ -22,7 +22,7 @@ export default function AddProject(){
         else{
             setMessage('Saving project...');
             try {
-                let response = await axios.post(
+                await axios.post(
                     `http://localhost:5001/projects/save_project`,
                     {
                         name: name,

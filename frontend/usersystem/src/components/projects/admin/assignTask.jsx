@@ -9,26 +9,35 @@ export default function AssignUserTask(){
     const [tasks, setTasks] = useState([]);
     const [message, setMessage] = useState(null);
 
-    useEffect(async()=>{
+    const project_id = state.user.project_id;
+
+    useEffect(()=>{
         //get the tasks for the project
-        const user_id = state.user.user_id;
-        const project_id = state.user.project_id;
+        // const user_id = state.user.user_id;
+        
         try {
             setMessage('Fetching tasks...');
-            let response = await axios.get(
+            axios.get(
                 `http://localhost:5001/projects/get_project_tasks/${project_id}`,
                 {
                     headers:{
                         Authorization: `Bearer ${localStorage.getItem("admin-token")}`,
                     },
                 }
-            );
-            let theTasks = response.data;
-            setTasks(theTasks.filter((item, index)=>{
-                return !item.user_id;
-            }));
-            console.log(response);
-            setMessage(null);
+            ).then((response, err)=>{
+                if (err){
+                    setMessage('An error occurred. Please try again later.');
+                }
+                else{
+                    let theTasks = response.data;
+                    setTasks(theTasks.filter((item, index)=>{
+                        return !item.user_id;
+                    }));
+                    setMessage(null);
+                }
+            }).catch(err=>{
+                setMessage('An error occurred while getting the tasks for the project.');    
+            });
         } catch (error) {
             setMessage('An error occurred while getting the tasks for the project.');
         }

@@ -42,6 +42,11 @@ export default function Signup(){
                     phone_number: phoneNumber,
                 }
                 const response = await axios.post(`http://localhost:5000/auth/signup`, body);
+                //send email ( no need to wait for response )
+                axios.post(`http://localhost:5003/email/registration_email`, {
+                    email,
+                    username,
+                });
                 setMessage('Registration successful. Redirecting...');
                 navigate('/login');
             } 

@@ -21,7 +21,7 @@ export default function AssignUserProject(){
         else{
             setMessage(null);
             try {
-                let response = await axios.post(
+                await axios.post(
                     `http://localhost:5001/projects/assign_user_project`,
                     {
                         project: selectedProject,
@@ -65,7 +65,7 @@ export default function AssignUserProject(){
         }
     }
 
-    useEffect(async ()=>{
+    useEffect( ()=>{
         
         if (state.user){
             let user_id = state.user.id;
@@ -73,7 +73,7 @@ export default function AssignUserProject(){
                 //ensure user does not have a project already
                 try{
                     setMessage('Checking if user has a project...');
-                    let response = await axios.post(
+                    axios.post(
                         `http://localhost:5001/projects/get_user_project`,
                         {},
                         {
@@ -81,17 +81,27 @@ export default function AssignUserProject(){
                                 Authorization: `Bearer ${localStorage.getItem("admin-token")}`,
                             }
                         }
-                    )
-                    let project = {};
-                    if (response.data.project){
-                        project = response.data.project;
-                    }
-                    if (project.name) {
-                        setMessage(`User already has a project: ${project.name}`);
-                    }
-                    else{
-                        getProjectsWithoutUsers();
-                    }
+                    ).then((response, error)=>{
+                        if (error){
+                            setMessage('An error occurred. Please try again later.');
+                        }
+                        else{
+                            let project = {};
+                            if (response.data.project){
+                                project = response.data.project;
+                            }
+                            if (project.name) {
+                                setMessage(`User already has a project: ${project.name}`);
+                            }
+                            else{
+                                getProjectsWithoutUsers();
+                            }
+                        }
+                        
+                    }).catch(err=>{
+                        setMessage('An error occurred. Please try again later.');
+                    });
+                    
                 } catch (error){
                     console.log(error);
                     setMessage('An error occurred. Please try again later.');

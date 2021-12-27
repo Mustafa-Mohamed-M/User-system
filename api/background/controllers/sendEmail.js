@@ -82,7 +82,7 @@ exports.sendProjectAssigned = (req, res)=>{
 		});
 	}
 	else{
-		res.send(400).send('project_name, username and email address are required in request body.');
+		res.status(400).send('project_name, username and email address are required in request body.');
 	}
 };
 

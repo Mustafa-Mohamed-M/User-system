@@ -248,13 +248,13 @@ export default function ProjectsHome(){
                             <div className="d-flex ">
                                 <nav aria-label="Pagination">
                                     <ul className="pagination">
-                                        <li class="page-item ">
-                                            <button class="page-link" href="#">Previous
+                                        <li className="page-item ">
+                                            <button className="page-link" href="#">Previous
                                             </button>
                                         </li>
                                         {pageLinks}
-                                        <li class="page-item ">
-                                            <button class="page-link" href="#">Next
+                                        <li className="page-item ">
+                                            <button className="page-link" href="#">Next
                                             </button>
                                         </li>
                                     </ul>

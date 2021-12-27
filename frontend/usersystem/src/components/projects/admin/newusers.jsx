@@ -61,7 +61,7 @@ export default function TheUsers(){
     
 
     async function assignProject( ){
-        console.log({selectedProject, currentUser});
+        // console.log({selectedProject, currentUser});
         if (selectedProject === null){
             setMessage('Please select a project')
         }
@@ -81,6 +81,18 @@ export default function TheUsers(){
                         },
                     }
                 );
+
+                //get the name of the project from the list of projects
+                let project_name = openProjects.find(element =>element.id === parseInt(selectedProject));
+                //check if the project was found
+                if (project_name) project_name = project_name.name
+                else project_name = '';
+                //send email to user that he has been assigned project
+                axios.post(`http://localhost:5003/email/assigned_project`, {
+                    email: currentUser.email,
+                    username: currentUser.username,
+                    project_name
+                }); // no need for await
                 setIsOpenAssignProject(false);
                 getAllUsers();
                 getOpenProjects();
