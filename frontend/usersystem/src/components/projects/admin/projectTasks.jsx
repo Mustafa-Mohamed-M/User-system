@@ -41,7 +41,18 @@ export default function ProjectTasks(){
                 setMessage(null);
                 
             } catch (error) {
-                setMessage('An error occurred.');
+                if (error.response){
+                    if (error.response.status === 401){
+                        navigate('/admin/login')
+                    }
+                    else{
+                        setMessage(`We could not fetch the tasks as requested: ${error.response.data}`);
+                    }
+                }
+                else{
+                    setMessage(`We could not fetch the tasks as requested.`);   
+                }
+                //setMessage(`We could not fetch the tasks as requested: ${error.response.status}`);
             }
         }
     }
@@ -51,7 +62,7 @@ export default function ProjectTasks(){
         setCurrentPage(1);
     }
 
-    async function assignTaskToUser(task_id){
+    async function assignTaskToUser(task){
         if (state.project.user_id === null){
             setMessage('The project has not yet been assigned a user.');
         }
@@ -61,7 +72,7 @@ export default function ProjectTasks(){
                 let response = await axios.post(
                     `http://localhost:5001/projects/assign_user_task`,
                     {
-                        task: task_id,
+                        task: task.id,
                         user: state.project.user_id,
                     },
                     {
@@ -70,6 +81,16 @@ export default function ProjectTasks(){
                         },
                     }
                 );
+                //send notification email
+                const taskName = task.name;
+                const username = state.project.assigned;
+                const email = state.project.email;
+                console.log({taskName, username, email});
+                axios.post(`http://localhost:5003/email/assigned_task`, {
+                    task_name: taskName,
+                    username: username,
+                    email: email
+                });
                 getTasks();
             }
             catch (err){
@@ -152,7 +173,15 @@ export default function ProjectTasks(){
 
     let pageLinks = [];
     for (let i = 0; i < numPages; i++){
-        pageLinks.push(<li key={i} className="page-item"><a className="page-link" href="#" onClick={(evt)=>goToPage(evt, i + 1)} >{i + 1}</a></li>);
+        let theClassName = "page-item"
+        if (i + 1 === currentPage){
+            theClassName = "page-item active"
+        }
+        console.log(i + theClassName);
+        pageLinks.push(<li key={i} 
+            className={'' + theClassName + ''}>
+            <a className="page-link" href="#" onClick={(evt)=>goToPage(evt, i + 1)} >{i + 1}</a>
+            </li>);
     }
 
     return (
@@ -206,6 +235,9 @@ export default function ProjectTasks(){
             <button className="btn btn-primary btn-sm ml-5" 
             onClick={()=>toggleModal()}
             >Add task...</button>
+            <button className="btn btn-primary btn-sm ml-5" 
+            onClick={()=>navigate('/admin/')}
+             >Back to projects</button>
             <br/>
             <label>{numTasks} tasks found</label>
             <br/>
@@ -249,7 +281,7 @@ export default function ProjectTasks(){
                                         <button 
                                         disabled={item.user_id !== null}
                                         className="btn btn-primary btn-sm mr-3 mb-3" 
-                                        onClick={()=>assignTaskToUser(item.id)}
+                                        onClick={()=>assignTaskToUser(item)}
                                         >Assign user</button>            
                                         <button className="btn btn-danger btn-sm mr-3 mb-3" >Delete</button>            
                                     </td>

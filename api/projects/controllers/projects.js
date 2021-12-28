@@ -52,6 +52,7 @@ exports.getAllProjectsPaginated = (req, res)=>{
                     assigned: result.recordset[i].assigned,
                     user_id: result.recordset[i].user_id,
                     tasks: result.recordset[i].tasks,
+                    email: result.recordset[i].email,
                 });
             }
             const totalProjects = result.output.TotalProjects;

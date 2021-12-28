@@ -44,6 +44,7 @@ export default function ProjectsHome(){
                     number: index + 1,
                     description: item.description,
                     tasks: item.tasks,
+                    email: item.email,
                     actions: 
                     <React.Fragment>
                         <button className="btn btn-primary btn-sm mr-3 mb-3" 
@@ -66,7 +67,6 @@ export default function ProjectsHome(){
             else{
                 setMessage('An error occurred. Please come back later.');    
             }
-            
         }
     }
 
